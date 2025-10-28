@@ -26,16 +26,19 @@ COLIMA_DAEMON_LOG_OUT="${COLIMA_HOME}/${COLIMA_DAEMON_LOG_NAME}.log"
 COLIMA_DAEMON_LOG_ERR="${COLIMA_HOME}/${COLIMA_DAEMON_LOG_NAME}.err"
 COLIMA_PERMISSIONS_LOG_OUT="${COLIMA_HOME}/${COLIMA_PERMISSIONS_LOG_NAME}.log"
 COLIMA_PERMISSIONS_LOG_ERR="${COLIMA_HOME}/${COLIMA_PERMISSIONS_LOG_NAME}.err"
+
+# docker socket
+DOCKER_SOCK="/var/run/docker.sock"
 # configuration>
 set +a
 
 # Make exported configuration immutable
 readonly \
-    COLIMA_DAEMON_LOG_NAME COLIMA_PERMISSIONS_LOG_NAME \
-    COLIMA_DAEMON_PLIST_NAME COLIMA_PERMISSIONS_PLIST_NAME \
-    COLIMA_USER COLIMA_GROUP COLIMA_HOME COLIMA_BIN \
-    COLIMA_DAEMON_LOG_OUT COLIMA_DAEMON_LOG_ERR \
-    COLIMA_PERMISSIONS_LOG_OUT COLIMA_PERMISSIONS_LOG_ERR
+    COLIMA_BIN COLIMA_DAEMON_LOG_ERR COLIMA_DAEMON_LOG_NAME \
+    COLIMA_DAEMON_LOG_OUT COLIMA_DAEMON_PLIST_NAME COLIMA_GROUP \
+    COLIMA_HOME COLIMA_PERMISSIONS_LOG_ERR \
+    COLIMA_PERMISSIONS_LOG_NAME COLIMA_PERMISSIONS_LOG_OUT \
+    COLIMA_PERMISSIONS_PLIST_NAME COLIMA_USER DOCKER_SOCK
 
 ################################################################################
 
@@ -47,17 +50,13 @@ COLIMA_DAEMON_PLIST_TEMPLATE="${SCRIPT_DIR}/${COLIMA_DAEMON_PLIST_NAME}.plist"
 COLIMA_DAEMON_PLIST_LAUNCHD="${LAUNCHD_DIR}/${COLIMA_DAEMON_PLIST_NAME}.plist"
 COLIMA_PERMISSIONS_PLIST_TEMPLATE="${SCRIPT_DIR}/${COLIMA_PERMISSIONS_PLIST_NAME}.plist"
 COLIMA_PERMISSIONS_PLIST_LAUNCHD="${LAUNCHD_DIR}/${COLIMA_PERMISSIONS_PLIST_NAME}.plist"
-
-DOCKER_SOCK="/var/run/docker.sock"
 # internal>
 
-# Ensure plist names are exported for envsubst
-export COLIMA_DAEMON_PLIST_NAME COLIMA_PERMISSIONS_PLIST_NAME
-
 # Make internal variables immutable
-readonly SCRIPT_DIR LAUNCHD_DIR DOCKER_SOCK \
-    COLIMA_DAEMON_PLIST_TEMPLATE COLIMA_DAEMON_PLIST_LAUNCHD \
-    COLIMA_PERMISSIONS_PLIST_TEMPLATE COLIMA_PERMISSIONS_PLIST_LAUNCHD
+readonly \
+    COLIMA_DAEMON_PLIST_LAUNCHD COLIMA_DAEMON_PLIST_TEMPLATE \
+    COLIMA_PERMISSIONS_PLIST_LAUNCHD \
+    COLIMA_PERMISSIONS_PLIST_TEMPLATE LAUNCHD_DIR SCRIPT_DIR
 
 ################################################################################
 
@@ -244,20 +243,6 @@ daemon_setup() {
 
 ################################################################################
 
-# Setup docker socket symlink
-docker_socket_setup() {
-    sock_target="${COLIMA_HOME}/.colima/default/docker.sock"
-    
-    # Remove existing symlink or file if exists
-    rm -f "${DOCKER_SOCK}"
-    
-    # Create symlink
-    ln -s "${sock_target}" "${DOCKER_SOCK}"
-    log_info "[+] Docker socket symlink created"
-}
-
-################################################################################
-
 # Check if permissions daemon is loaded in launchd
 permissions_is_loaded() {
     launchctl print system/"${COLIMA_PERMISSIONS_PLIST_NAME}" >/dev/null 2>&1
@@ -305,7 +290,6 @@ main() {
     user_create
     setup_directories
     daemon_setup
-    docker_socket_setup
     permissions_setup
     
     log_info "[+] Colima daemon setup completed"
