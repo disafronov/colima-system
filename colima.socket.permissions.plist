@@ -8,9 +8,9 @@
     <array>
         <string>/bin/sh</string>
         <string>-c</string>
-        <string>[ -S &quot;${COLIMA_HOME}/.colima/default/docker.sock&quot; ] &amp;&amp; chgrp ${COLIMA_GROUP} &quot;${COLIMA_HOME}/.colima/default/docker.sock&quot; &amp;&amp; chmod 660 &quot;${COLIMA_HOME}/.colima/default/docker.sock&quot;</string>
+        <string>echo &quot;$(date '+%Y-%m-%d %H:%M:%S') Checking socket...&quot;; if [ -S &quot;${COLIMA_HOME}/.colima/default/docker.sock&quot; ]; then chgrp ${COLIMA_GROUP} &quot;${COLIMA_HOME}/.colima/default/docker.sock&quot; &amp;&amp; echo &quot;$(date '+%Y-%m-%d %H:%M:%S') Set group to ${COLIMA_GROUP}&quot; &amp;&amp; chmod 660 &quot;${COLIMA_HOME}/.colima/default/docker.sock&quot; &amp;&amp; echo &quot;$(date '+%Y-%m-%d %H:%M:%S') Set permissions to 660&quot; &amp;&amp; ln -sf &quot;${COLIMA_HOME}/.colima/default/docker.sock&quot; &quot;${DOCKER_SOCK}&quot; &amp;&amp; echo &quot;$(date '+%Y-%m-%d %H:%M:%S') Created symlink: ${DOCKER_SOCK}&quot;; else echo &quot;$(date '+%Y-%m-%d %H:%M:%S') Socket not found&quot; &gt;&amp;2; fi</string>
     </array>
-    <key>WatchPaths</key>
+    <key>QueueDirectories</key>
     <array>
         <string>${COLIMA_HOME}/.colima/default</string>
     </array>
