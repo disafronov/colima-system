@@ -121,12 +121,12 @@ check_prerequisites() {
     fi
     
     if [ ! -f "${COLIMA_DAEMON_PLIST_TEMPLATE}" ]; then
-        log_error "[-] Colima plist template not found at ${COLIMA_DAEMON_PLIST_TEMPLATE}"
+        log_error "[-] Colima daemon plist template not found at ${COLIMA_DAEMON_PLIST_TEMPLATE}"
         exit 1
     fi
     
     if [ ! -f "${COLIMA_PERMISSIONS_PLIST_TEMPLATE}" ]; then
-        log_error "[-] Permissions plist not found at ${COLIMA_PERMISSIONS_PLIST_TEMPLATE}"
+        log_error "[-] Permissions plist template not found at ${COLIMA_PERMISSIONS_PLIST_TEMPLATE}"
         exit 1
     fi
     
