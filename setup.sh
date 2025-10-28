@@ -50,13 +50,17 @@ COLIMA_DAEMON_PLIST_TEMPLATE="${SCRIPT_DIR}/${COLIMA_DAEMON_PLIST_NAME}.plist"
 COLIMA_DAEMON_PLIST_LAUNCHD="${LAUNCHD_DIR}/${COLIMA_DAEMON_PLIST_NAME}.plist"
 COLIMA_PERMISSIONS_PLIST_TEMPLATE="${SCRIPT_DIR}/${COLIMA_PERMISSIONS_PLIST_NAME}.plist"
 COLIMA_PERMISSIONS_PLIST_LAUNCHD="${LAUNCHD_DIR}/${COLIMA_PERMISSIONS_PLIST_NAME}.plist"
+
+COLIMA_WRAPPER_TEMPLATE="${SCRIPT_DIR}/colima-system.template"
+COLIMA_WRAPPER_BIN="/usr/local/bin/colima-system"
 # internal>
 
 # Make internal variables immutable
 readonly \
     COLIMA_DAEMON_PLIST_LAUNCHD COLIMA_DAEMON_PLIST_TEMPLATE \
     COLIMA_PERMISSIONS_PLIST_LAUNCHD \
-    COLIMA_PERMISSIONS_PLIST_TEMPLATE LAUNCHD_DIR SCRIPT_DIR
+    COLIMA_PERMISSIONS_PLIST_TEMPLATE COLIMA_WRAPPER_BIN \
+    COLIMA_WRAPPER_TEMPLATE LAUNCHD_DIR SCRIPT_DIR
 
 ################################################################################
 
@@ -283,6 +287,26 @@ permissions_setup() {
 
 ################################################################################
 
+# Install wrapper script from template
+wrapper_install() {
+    log_info "[+] Installing colima-system wrapper"
+    
+    if [ ! -f "${COLIMA_WRAPPER_TEMPLATE}" ]; then
+        log_error "[-] Wrapper template not found at ${COLIMA_WRAPPER_TEMPLATE}"
+        exit 1
+    fi
+    
+    export COLIMA_USER COLIMA_HOME COLIMA_BIN
+    envsubst < "${COLIMA_WRAPPER_TEMPLATE}" > "${COLIMA_WRAPPER_BIN}"
+    
+    chown root:wheel "${COLIMA_WRAPPER_BIN}"
+    chmod 755 "${COLIMA_WRAPPER_BIN}"
+    
+    log_info "[+] colima-system wrapper installed at ${COLIMA_WRAPPER_BIN}"
+}
+
+################################################################################
+
 # Main function
 main() {
     check_prerequisites
@@ -291,6 +315,7 @@ main() {
     setup_directories
     daemon_setup
     permissions_setup
+    wrapper_install
     
     log_info "[+] Colima daemon setup completed"
 }

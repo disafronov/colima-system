@@ -1,0 +1,7 @@
+#!/bin/sh
+# colima-system — wrapper for Colima system daemon on macOS.
+# Author: Dmitrii Safronov <dhameoelin@gmail.com>
+
+set -e
+
+sudo -u ${COLIMA_USER} -H sh -c "SHELL=/bin/sh HOME=${COLIMA_HOME} ${COLIMA_BIN} $@"
