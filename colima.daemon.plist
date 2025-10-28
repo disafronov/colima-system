@@ -15,8 +15,6 @@
     <string>${COLIMA_USER}</string>
     <key>GroupName</key>
     <string>${COLIMA_GROUP}</string>
-    <key>KeepAlive</key>
-    <true/>
     <key>RunAtLoad</key>
     <true/>
     <key>StandardOutPath</key>
