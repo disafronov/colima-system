@@ -75,17 +75,30 @@ log_error() {
 
 ################################################################################
 
-# Render plist from template, set ownership/permissions, validate
+# Render plist from template, validate before copying, set ownership/permissions
 gen_plist() {
     tpl_path="$1"
     out_path="$2"
-    envsubst < "$tpl_path" > "$out_path"
-    chown root:wheel "$out_path"
-    chmod 644 "$out_path"
-    if ! plutil -lint "$out_path" >/dev/null 2>&1; then
-        log_error "[-] Invalid plist: $out_path"
+    
+    # Create temporary file
+    temp_file=$(mktemp)
+    
+    # Generate plist in temp location
+    envsubst < "$tpl_path" > "$temp_file"
+    
+    # Validate before copying
+    if ! plutil -lint "$temp_file" >/dev/null 2>&1; then
+        log_error "[-] Invalid plist generated from template: $tpl_path"
+        rm -f "$temp_file"
         exit 1
     fi
+    
+    # Copy to final location only if valid
+    cp "$temp_file" "$out_path"
+    chown root:wheel "$out_path"
+    chmod 644 "$out_path"
+    
+    rm -f "$temp_file"
 }
 
 ################################################################################
