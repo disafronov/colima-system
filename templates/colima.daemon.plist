@@ -8,8 +8,6 @@
     <array>
         <string>${COLIMA_BIN}</string>
         <string>start</string>
-        <string>--runtime</string>
-        <string>docker</string>
     </array>
     <key>UserName</key>
     <string>${COLIMA_USER}</string>
