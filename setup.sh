@@ -130,6 +130,11 @@ check_prerequisites() {
         exit 1
     fi
     
+    if [ ! -f "${COLIMA_WRAPPER_TEMPLATE}" ]; then
+        log_error "[-] Wrapper template not found at ${COLIMA_WRAPPER_TEMPLATE}"
+        exit 1
+    fi
+    
     if ! command -v envsubst >/dev/null 2>&1; then
         log_error "[-] envsubst not found. Please install gettext."
         exit 1
@@ -303,11 +308,6 @@ permissions_setup() {
 # Install wrapper script from template
 wrapper_install() {
     log_info "[+] Installing colima-system wrapper"
-    
-    if [ ! -f "${COLIMA_WRAPPER_TEMPLATE}" ]; then
-        log_error "[-] Wrapper template not found at ${COLIMA_WRAPPER_TEMPLATE}"
-        exit 1
-    fi
     
     export COLIMA_USER COLIMA_HOME COLIMA_BIN
     envsubst < "${COLIMA_WRAPPER_TEMPLATE}" > "${COLIMA_WRAPPER_BIN}"
