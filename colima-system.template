@@ -4,4 +4,11 @@
 
 set -e
 
-sudo -u ${COLIMA_USER} -H sh -c "SHELL=/bin/sh HOME=${COLIMA_HOME} ${COLIMA_BIN} $@"
+sudo -u ${COLIMA_USER} \
+    -H \
+    env -i \
+    HOME=${COLIMA_HOME} \
+    PATH=/opt/homebrew/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin \
+    SHELL=/bin/sh \
+    ${COLIMA_BIN} \
+    $@
