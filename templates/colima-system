@@ -10,5 +10,5 @@ sudo -u ${COLIMA_USER} \
     HOME=${COLIMA_HOME} \
     PATH=/opt/homebrew/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin \
     SHELL=/bin/sh \
-    ${COLIMA_BIN} \
+    colima \
     $@

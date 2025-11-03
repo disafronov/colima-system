@@ -19,7 +19,6 @@ COLIMA_PERMISSIONS_PLIST_NAME="colima.socket.permissions"
 COLIMA_USER="colima"
 COLIMA_GROUP="docker"
 COLIMA_HOME="/var/lib/colima"
-COLIMA_BIN="/opt/homebrew/bin/colima"
 
 # logs
 COLIMA_DAEMON_LOG_OUT="${COLIMA_HOME}/${COLIMA_DAEMON_LOG_NAME}.log"
@@ -34,7 +33,7 @@ set +a
 
 # Make exported configuration immutable
 readonly \
-    COLIMA_BIN COLIMA_DAEMON_LOG_ERR COLIMA_DAEMON_LOG_NAME \
+    COLIMA_DAEMON_LOG_ERR COLIMA_DAEMON_LOG_NAME \
     COLIMA_DAEMON_LOG_OUT COLIMA_DAEMON_PLIST_NAME COLIMA_GROUP \
     COLIMA_HOME COLIMA_PERMISSIONS_LOG_ERR \
     COLIMA_PERMISSIONS_LOG_NAME COLIMA_PERMISSIONS_LOG_OUT \
@@ -115,8 +114,8 @@ check_prerequisites() {
         exit 1
     fi
     
-    if ! command -v "${COLIMA_BIN}" >/dev/null 2>&1; then
-        log_error "[-] Colima not found at ${COLIMA_BIN}. Please install it first."
+    if ! command -v colima >/dev/null 2>&1; then
+        log_error "[-] colima not found. Please install it first."
         exit 1
     fi
     
@@ -309,7 +308,7 @@ permissions_setup() {
 wrapper_install() {
     log_info "[+] Installing colima-system wrapper"
     
-    export COLIMA_USER COLIMA_HOME COLIMA_BIN
+    export COLIMA_USER COLIMA_HOME
     envsubst < "${COLIMA_WRAPPER_TEMPLATE}" > "${COLIMA_WRAPPER_BIN}"
     
     chown root:wheel "${COLIMA_WRAPPER_BIN}"

@@ -6,7 +6,7 @@
     <string>${COLIMA_DAEMON_PLIST_NAME}</string>
     <key>ProgramArguments</key>
     <array>
-        <string>${COLIMA_BIN}</string>
+        <string>colima</string>
         <string>start</string>
     </array>
     <key>UserName</key>
