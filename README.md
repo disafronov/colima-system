@@ -5,8 +5,8 @@ Run Colima as a headless system daemon on macOS via launchd. Provides a stable `
 ## Requirements
 - macOS (root required)
 - Homebrew installed and configured
-- Colima (installed via Homebrew)
-- envsubst (installed via Homebrew, from gettext package)
+- `colima` (installed via Homebrew)
+- `envsubst` (installed via Homebrew, from gettext package)
 
 ## Install
 ```bash
