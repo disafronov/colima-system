@@ -6,8 +6,9 @@
     <string>${COLIMA_DAEMON_PLIST_NAME}</string>
     <key>ProgramArguments</key>
     <array>
-        <string>colima</string>
-        <string>start</string>
+        <string>/bin/sh</string>
+        <string>-c</string>
+        <string>colima start || { colima stop --force; colima start; }</string>
     </array>
     <key>UserName</key>
     <string>${COLIMA_USER}</string>
